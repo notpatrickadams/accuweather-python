@@ -14,7 +14,10 @@ class Weather:
         """
         r = requests.get(f"http://dataservice.accuweather.com/locations/v1/cities/search?apikey={self.apiKey}&q={name}").text
 
-        return json.loads(r)[0]["Key"]
+        try:
+            return json.loads(r)[0]["Key"]
+        except:
+            return None
 
     def getPrecipitationInfo(self, obj, index):
         """
@@ -47,6 +50,9 @@ class Weather:
         Keyword arguments:
         * localcode - Code returned from Accuweather API or getLocalCode()
         """
+
+        if localcode == None:
+            return None
 
         r = requests.get(f"http://dataservice.accuweather.com/forecasts/v1/daily/1day/{localcode}?apikey={self.apiKey}").text
         obj = json.loads(r)
@@ -81,6 +87,9 @@ class Weather:
             if delta > limit:
                 return False
             return True
+
+        if localcode == None:
+            return None
 
         if checkDate(date) == False:
             return {"Info" : "None"}
